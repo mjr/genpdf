@@ -1,5 +1,5 @@
 const express = require('express')
-const puppeteer = require('puppeteer')
+const chromium = require('chrome-aws-lambda')
 
 const app = express()
 const port = 3000
@@ -16,7 +16,7 @@ app.get('/pdf', async (req, res) => {
   }
 
   try {
-    const browser = await puppeteer.launch()
+    const browser = await chromium.puppeteer.launch()
     const page = await browser.newPage()
     await page.goto(url, { waitUntil: 'networkidle0' })
     const pdf = await page.pdf({ printBackground: true, format: 'A4' })
