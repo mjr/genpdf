@@ -4,7 +4,7 @@ export default async function generatePDF(req, res) {
   const { url } = req.query
 
   if (!url) {
-    return res.status(400).send('Missing URL parameter')
+    res.status(400).send('Missing URL parameter')
   }
 
   try {
@@ -19,8 +19,10 @@ export default async function generatePDF(req, res) {
     await page.goto(url, { waitUntil: 'networkidle0' })
     const pdf = await page.pdf({ printBackground: true, format: 'A4' })
     await browser.close()
-    return res.contentType('application/pdf').send(pdf)
+
+    res.setHeader('Content-Type', 'application/pdf')
+    res.send(pdf)
   } catch (err) {
-    return res.status(500).send(err.message)
+    res.status(500).send(err.message)
   }
 }
