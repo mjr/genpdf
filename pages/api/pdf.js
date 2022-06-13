@@ -1,14 +1,6 @@
-const express = require('express')
-const chromium = require('chrome-aws-lambda')
+import chromium from 'chrome-aws-lambda'
 
-const app = express()
-const port = 3000
-
-app.get('/', (req, res) => {
-  res.send('Tiny PDF Generator')
-})
-
-app.get('/pdf', async (req, res) => {
+export default async function generatePDF(req, res) {
   const { url } = req.query
 
   if (!url) {
@@ -31,10 +23,4 @@ app.get('/pdf', async (req, res) => {
   } catch (err) {
     return res.status(500).send(err.message)
   }
-})
-
-app.listen(process.env.PORT || port, () => {
-  console.log(`Listening on port ${port}`)
-})
-
-module.exports = app
+}
