@@ -5,6 +5,7 @@ export default async function generatePDF(req, res) {
 
   if (!url) {
     res.status(400).send('Missing URL parameter')
+    return
   }
 
   try {
