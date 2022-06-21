@@ -1,4 +1,5 @@
-import { Endpoint, S3 } from 'aws-sdk'
+import S3 from 'aws-sdk/clients/s3'
+import { Endpoint } from 'aws-sdk/lib/core'
 import PDFMerger from 'pdf-merger-js'
 
 async function getBuffer(url) {
