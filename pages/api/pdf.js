@@ -1,4 +1,4 @@
-import AWS from 'aws-sdk'
+import { Endpoint, S3 } from 'aws-sdk'
 import chromium from 'chrome-aws-lambda'
 
 const chromeExecPaths = {
@@ -45,8 +45,8 @@ export default async function generatePDF(req, res) {
     const pdf = await page.pdf({ printBackground: true, format: 'A4' })
     await browser.close()
 
-    const spacesEndpoint = new AWS.Endpoint(process.env.PDF_AWS_S3_ENDPOINT_URL);
-    const s3 = new AWS.S3({
+    const spacesEndpoint = new Endpoint(process.env.PDF_AWS_S3_ENDPOINT_URL);
+    const s3 = new S3({
       endpoint: spacesEndpoint,
       accessKeyId: process.env.PDF_AWS_ACCESS_KEY_ID,
       secretAccessKey: process.env.PDF_AWS_SECRET_ACCESS_KEY
