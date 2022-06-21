@@ -1,3 +1,4 @@
+import AWS from 'aws-sdk'
 import PDFMerger from 'pdf-merger-js'
 
 async function getBuffer(url) {
@@ -23,8 +24,25 @@ export default async function mergePDFs(req, res) {
     }
     const mergedPdf = await merger.saveAsBuffer()
 
-    res.setHeader('Content-Type', 'application/pdf')
-    res.send(mergedPdf)
+    const spacesEndpoint = new AWS.Endpoint(process.env.PDF_AWS_S3_ENDPOINT_URL);
+    const s3 = new AWS.S3({
+      endpoint: spacesEndpoint,
+      accessKeyId: process.env.PDF_AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.PDF_AWS_SECRET_ACCESS_KEY
+    })
+    
+    const filename = 'service-print/test-merge-pdf-google'
+    const fileContent = mergedPdf
+
+    const params = {
+      ACL: 'public-read',
+      Bucket: process.env.PDF_AWS_BUCKET_NAME,
+      Key: `${filename}.pdf`,
+      Body: fileContent
+    }
+
+    const data = await s3.upload(params).promise()
+    res.send(`PDF generated successfully! URL: ${data.Location}`)
   } catch (err) {
     res.status(500).send(err.message)
   }
