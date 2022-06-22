@@ -42,8 +42,8 @@ export default async function mergePDFs(req, res) {
       Body: fileContent
     }
 
-    const data = await s3.upload(params).promise()
-    res.send(`PDF generated successfully! URL: ${data.Location}`)
+    s3.upload(params).promise()
+    res.send(`PDF generated successfully!`)
   } catch (err) {
     res.status(500).send(err.message)
   }
